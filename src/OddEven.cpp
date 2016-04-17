@@ -26,19 +26,106 @@ Note : The Order of Randoms Pointers should be in the same order they are in the
 arrived before 5 in the SLL .33->random should be 5 but not in reverse .And it should also be continous ,Like
 if  there is only 1 odd node 71 any where between 33 and 5 ,33->random should point to 71 and 71->random should
 point to 5.
-The type if node is oddevennode ,and not Node .
+The type of node is oddevennode ,and not Node .
 */
 #include <stdlib.h>
 #include <stdio.h>
+
+int oddNodes(struct oddevennode *, struct oddevennode *);
+int evenNodes(struct oddevennode *, struct oddevennode *);
 
 struct oddevennode{
 	int data;
 	struct oddevennode * next;
 	struct oddevennode * random;
-
 };
 
 int * oddeven_sll(struct oddevennode *head){
+	if (head == NULL)
+		return NULL;
 
-	return NULL;
+	int *arr = (int *)malloc(sizeof(int) * 2);
+	arr[0] = 0;
+	arr[1] = 0;
+
+	if (head->next == NULL)
+	{
+		if (head->data%2!=0)
+		{
+			arr[0] = 1;
+			arr[1] = 0;
+		}
+		else
+		{
+			arr[0] = 0;
+			arr[1] = 1;
+		}
+		return arr;
+	}
+
+		int c1 = 0,c2=0;
+		struct oddevennode *temp1, *temp2,*temp=head;
+		while (temp != NULL)
+		{
+			temp1 = temp; 
+			temp2 = temp->next;
+			if (temp1->data % 2 == 0)   //Checking for even nodes
+			{
+				arr[1] = evenNodes(temp1, temp2);
+				c1 = 1;
+			}
+			else
+			if (temp1->data % 2 == 1)  //Checking for odd nodes
+
+			{
+				arr[0] = oddNodes(temp1, temp2);
+				c2 = 1;
+			}
+			if (c1 == 1 && c2 == 1)
+				break;
+			else
+			temp = temp->next;
+		}
+
+	return arr;
+}
+int oddNodes(struct oddevennode *temp1, struct oddevennode * temp2)
+{
+	int c1 = 0;
+	while (temp1->next != NULL)
+
+	{
+		while (temp2->data % 2 != 1 && temp2->next != NULL)
+			temp2 = temp2->next;
+		if (temp2->next == NULL)
+		{
+			temp1->random = NULL;
+			break;
+		}
+		temp1->random = temp2;
+		temp1 = temp2;
+		temp2 = temp2->next;
+		c1+=1;
+	}
+	return (c1+2);
+}
+
+int evenNodes(struct oddevennode *temp1, struct oddevennode * temp2)
+{
+	int c2 = 0;
+	while (temp1->next != NULL)
+	{
+		while (temp2->data % 2 != 0 && temp2->next != NULL)
+			temp2 = temp2->next;
+		if (temp2->next == NULL)
+		{
+			temp1->random = NULL;
+			break;
+		}
+		temp1->random = temp2;
+		temp1 = temp2;
+		temp2 = temp2->next;
+		c2 += 1;
+	}
+	return (c2+2);
 }
